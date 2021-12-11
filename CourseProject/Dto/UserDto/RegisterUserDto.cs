@@ -9,10 +9,6 @@ namespace CourseProject.Dto.UserDto
     public class RegisterUserDto
     {
         [Required]
-        [Display(Name = "Username")]
-        public string Username { get; set; }
-
-        [Required]
         [Display(Name = "Email")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }

@@ -8,6 +8,7 @@ namespace CourseProject.Models
     public class Group
     {
         public Guid Id { get; set; }
+        public int Number { get; set; }
         public Guid ProfessionId { get; set; }
         public Profession Profession { get; set; }
         public int Course { get; set; }

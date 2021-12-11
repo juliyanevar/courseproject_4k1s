@@ -32,18 +32,18 @@ namespace CourseProject.Controllers
         {
             var userExist = await _userManager.FindByEmailAsync(model.Email);
             if (userExist != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User with username already exists" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User with this email already exists" });
             var user = new User()
             {
-                UserName = model.Username,
+                UserName = model.Email,
                 Email = model.Email
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Can not create user" });
             }
+            await _signInManager.SignInAsync(user, false);
             return Ok(new Response { Status = "Success", Message = "User created successfully" });
         }
 
@@ -51,22 +51,39 @@ namespace CourseProject.Controllers
         [Route("RegisterAdmin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterUserDto model)
         {
-            var userExist = await _userManager.FindByNameAsync(model.Username);
+            var userExist = await _userManager.FindByEmailAsync(model.Email);
             if (userExist != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User with username already exists" });
             var user = new User()
             {
-                UserName = model.Username,
+                UserName = model.Email,
                 Email = model.Email
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Can not create user" });
             }
+            await _signInManager.SignInAsync(user, false);
             await _userManager.AddToRoleAsync(user, "admin");
             return Ok(new Response { Status = "Success", Message = "Admin created successfully" });
+        }
+
+        [HttpPut]
+        [Route("AddRoleToUser")]
+        public async Task<IActionResult> AddRoleToUser([FromBody] AddRoleUserDto model)
+        {
+            var currentUser = this.User;
+            var user = await _userManager.GetUserAsync(currentUser);
+            await _userManager.AddToRoleAsync(user, model.RoleName);
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            var result=await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Can not update user" });
+            }
+            return Ok(new Response { Status = "Success", Message = "User update successfully" });
         }
 
         [HttpPost]

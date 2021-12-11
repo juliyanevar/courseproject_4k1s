@@ -30,8 +30,8 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
-   const navigate = useNavigate();
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const navigate = useNavigate();
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
@@ -50,7 +50,11 @@ export default function SignIn() {
 
       const result = response.json();
       console.log(result);
-      navigate("/");
+
+      console.log(response.status);
+
+      if(response.status==200) navigate("/");
+      else navigate("/SignIn");
   };
 
   return (
@@ -77,7 +81,7 @@ export default function SignIn() {
               required
               fullWidth
               id="Username"
-              label="Username"
+              label="Email"
               name="Username"
               autoComplete="Username"
               autoFocus
@@ -100,9 +104,9 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
+            <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/SignUp" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
