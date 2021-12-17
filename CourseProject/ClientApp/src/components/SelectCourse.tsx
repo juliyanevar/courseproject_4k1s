@@ -51,6 +51,7 @@ export default function SelectCourse() {
         <InputLabel id="select-course-label">Course</InputLabel>
         <Select
           labelId="select-course-label"
+          name = "select-course"
           id="select-course"
           value={course}
           onChange={handleChange}

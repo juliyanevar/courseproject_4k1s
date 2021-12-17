@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,9 +14,13 @@ namespace CourseProject.Models
         public Subject Subject { get; set; }
         public Guid AuditoriumId { get; set; }
         public Auditorium Auditorium { get; set; }
-        public Guid UserTeacherId { get; set; }
-        public User UserTeacher { get; set; }
-        public Guid UserStudentId { get; set; }
+        public string UserTeacherId { get; set; }
+        [ForeignKey("UserTeacherId")]
+        [InverseProperty("TeacherAttendance")]
+        public virtual User UserTeacher { get; set; }
+        public string UserStudentId { get; set; }
+        [ForeignKey("UserStudentId")]
+        [InverseProperty("StudentAttendance")]
         public User UserStudent { get; set; }
     }
 }

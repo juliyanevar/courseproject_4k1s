@@ -1,28 +1,35 @@
-import * as React from 'react';
-import {useNavigate} from "react-router-dom";
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { getUser } from "./getUser";
+import Alert from '@material-ui/lab/Alert';
 
 function Copyright(props: any) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
       <Link color="inherit" href="https://localhost:44337/">
         My Website
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
@@ -30,31 +37,44 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
-    const navigate = useNavigate();
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const [iserror, setIserror] = React.useState(false)
+  const [errorMessages, setErrorMessages] = React.useState([''])
+
+  const navigate = useNavigate();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setIserror(false);
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    const requestData=({
-      Username: data.get('Username'),
-      Password: data.get('Password'),
-    });
+    const requestData = {
+      Username: data.get("Username"),
+      Password: data.get("Password"),
+    };
     console.log(data);
-    const response = await fetch(process.env.REACT_APP_API+"account/Login", {
-        method: "POST",
-        body: JSON.stringify(requestData),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await fetch(process.env.REACT_APP_API + "account/Login", {
+      method: "POST",
+      body: JSON.stringify(requestData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = response.json();
+    console.log(result);
+
+    console.log(response.status);
+
+    if (response.status == 200) {
+      getUser().then((data) => {
+        console.log(data.userName);
+        localStorage.setItem("username", data.userName);
+        localStorage.setItem("rolename", data.roleName);
+        window.location.reload();
       });
-
-      const result = response.json();
-      console.log(result);
-
-      console.log(response.status);
-
-      if(response.status==200) navigate("/");
-      else navigate("/SignIn");
+      navigate("/");
+      } else
+    { setErrorMessages(["Cannot sign in. Wrong email and password!"])
+        setIserror(true)}
   };
 
   return (
@@ -64,18 +84,23 @@ export default function SignIn() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -96,6 +121,15 @@ export default function SignIn() {
               id="Password"
               autoComplete="current-password"
             />
+            <div>
+            {iserror && 
+              <Alert severity="error">
+                  {errorMessages.map((msg, i) => {
+                      return <div key={i}>{msg}</div>
+                  })}
+              </Alert>
+            }       
+          </div>
             <Button
               type="submit"
               fullWidth

@@ -64,7 +64,18 @@ export default function AddRoleToUser() {
 
           const result = response.json();
           console.log(result);
-          if (response.status == 200) navigate("/");
+          if (response.status == 200){
+            if(data.get("controlled-radio-buttons-group")=="student"){
+              navigate("/AddGroupToStudent");
+                localStorage.setItem("rolename", "student");
+              window.location.reload();
+            } 
+            else{
+              navigate("/AddPulpitToTeacher");
+              localStorage.setItem("rolename", "teacher");
+              window.location.reload();
+            } 
+          } 
           else navigate("/SignUp");
   };
 

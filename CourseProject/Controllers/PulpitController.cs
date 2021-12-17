@@ -1,6 +1,7 @@
 ﻿using CourseProject.Dto.PulpitDto;
 using CourseProject.Models;
 using CourseProject.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +13,7 @@ namespace CourseProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PulpitController : ControllerBase
     {
         private IRepositoryWrapper _repositoryWrapper;
@@ -41,6 +43,42 @@ namespace CourseProject.Controllers
                     result1.Add(newPulpit);
                 }
                 return new JsonResult(result1);
+            }
+            return NotFound();
+        }
+
+        [HttpGet("facultyName")]
+        [Route("GetPulpitNamesByFaculty")]
+        public async Task<IActionResult> GetPulpitNamesByFaculty(string facultyName)
+        {
+            var faculty = await _repositoryWrapper.Faculty.FindFirstByConditionAsync(x => x.Name.Equals(facultyName));
+            var result = await _repositoryWrapper.Pulpit.FindByConditionAsync(x => x.FacultyId.Equals(faculty.Id));
+            var result1 = new List<string>();
+            if (result != null)
+            {
+                foreach (var item in result)
+                {
+                    result1.Add(item.Name);
+                }
+                return new JsonResult(result1.Distinct());
+            }
+            return NotFound();
+        }
+
+        [HttpGet]
+        [Route("GetFacultyNames")]
+        public async Task<IActionResult> GetFacultyNames()
+        {
+            var result = await _repositoryWrapper.Pulpit.FindAllAsync();
+            var result1 = new List<string>();
+            if (result != null)
+            {
+                foreach (var item in result)
+                {
+                    var faculty = await _repositoryWrapper.Faculty.FindFirstByConditionAsync(x => x.Id.Equals(item.FacultyId));
+                    result1.Add(faculty.Name);
+                }
+                return new JsonResult(result1.Distinct());
             }
             return NotFound();
         }

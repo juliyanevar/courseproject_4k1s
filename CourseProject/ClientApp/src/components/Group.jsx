@@ -204,6 +204,10 @@ function Group() {
                     handleRowDelete(oldData, resolve)
                   }),
               }}
+              options={{
+                sorting: true,
+                grouping: true
+              }}
             />
           </Grid>
         </Grid>

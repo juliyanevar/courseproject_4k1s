@@ -2,6 +2,7 @@
 using CourseProject.Dto.Profession;
 using CourseProject.Models;
 using CourseProject.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +14,7 @@ namespace CourseProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProfessionController : ControllerBase
     {
         private IRepositoryWrapper _repositoryWrapper;

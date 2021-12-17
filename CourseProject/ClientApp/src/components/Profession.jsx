@@ -199,6 +199,10 @@ function Profession() {
                     handleRowDelete(oldData, resolve)
                   }),
               }}
+              options={{
+                sorting: true,
+                grouping: true
+              }}
             />
           </Grid>
           <Grid item xs={1}></Grid>

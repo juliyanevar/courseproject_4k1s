@@ -14,5 +14,8 @@ namespace CourseProject.Models
         public virtual Pulpit Pulpit { get; set; }
         public Guid? GroupId { get; set; }
         public virtual Group Group { get; set; }
+
+        public virtual ICollection<Attendance> TeacherAttendance { get; set; }
+        public virtual ICollection<Attendance> StudentAttendance { get; set; }
     }
 }

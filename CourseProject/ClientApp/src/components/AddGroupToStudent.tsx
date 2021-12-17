@@ -38,25 +38,25 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function AddGriupToStudent() {
+export default function AddGroupToStudent() {
     const navigate = useNavigate();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
     console.log({
-      firstName: data.get('firstName'),
-      lastName: data.get('lastName'),
-      roleName: data.get("controlled-radio-buttons-group")
+      ProfessionName: data.get('select-profession'),
+      Course: data.get('select-course'),
+      Number: data.get("select-group")
     });
 
     const requestData = {
-        FirstName: data.get('firstName'),
-        LastName: data.get('lastName'),
-        RoleName: data.get("controlled-radio-buttons-group")
+      ProfessionName: data.get('select-profession'),
+      Course: data.get('select-course'),
+      Number: data.get("select-group")
       };
         console.log(data);
-        const response = await fetch(process.env.REACT_APP_API+"account/AddRoleToUser", {
+        const response = await fetch(process.env.REACT_APP_API+"account/AddGroupToStudent", {
             method: "PUT",
             body: JSON.stringify(requestData),
             headers: {
@@ -108,6 +108,13 @@ export default function AddGriupToStudent() {
             >
               Next Step
             </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/AddRoleToUser" variant="body2">
+                  Back
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />

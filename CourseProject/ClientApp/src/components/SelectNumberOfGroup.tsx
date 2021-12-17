@@ -52,6 +52,7 @@ export default function SelectNumberOfGroup() {
         <Select
           labelId="select-group-label"
           id="select-group"
+          name="select-group"
           value={group}
           onChange={handleChange}
         >

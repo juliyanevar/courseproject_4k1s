@@ -92,6 +92,7 @@ export default function SelectFaculty() {
         <Select
           labelId="select-profession-label"
           id="select-profession"
+          name = "select-profession"
           value={profession}
           onChange={handleChangProfession}
         >
